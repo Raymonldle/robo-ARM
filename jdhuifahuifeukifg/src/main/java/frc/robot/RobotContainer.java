@@ -17,6 +17,7 @@ import frc.robot.commands.Forward;
 import frc.robot.commands.Backward;
 import frc.robot.commands.Drive;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -25,11 +26,18 @@ import frc.robot.commands.Drive;
  */
 public class RobotContainer {
   private final CommandXboxController m_commandController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  AHRS m_AHRS = new AHRS();
   private final XboxController m_xboxController = new XboxController(0);
 
   // The robot's subsystems and commands are defined here...
   private final Drivebase m_db = new Drivebase();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  private PIDBalance m_balance = new PIDBalance(m_db,10);
+
+
+
+
   private Forward m_Forward = new Forward(m_db,2);
   private Backward m_Backward = new Backward(m_db,2);
   private Drive m_drive = new Drive(m_db,m_xboxController);
@@ -65,10 +73,13 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
+  
+    
+    m_db.setDefaultCommand(m_drive);
+
     m_commandController.y().whileTrue(m_Forward);
     m_commandController.b().whileTrue(m_Backward);
     
-    m_db.setDefaultCommand(m_drive);
   }
 
   /**
